@@ -2,13 +2,13 @@ clear
 clc
 clf('reset')
 
-%Pide la función incial
-fun = input("Ingresa la función a evaluar en formato simbolico: ");
 %Dar la opción de elegir derivacion o integracion
 opc = input("Elige 1 si quieres hacer derivación ó 2 si quieres hacer integración: ");
 
 %-------Punto 1, derivación polinomio interpolador de Newton-------
 if(opc == 1)
+    %Pide la función incial
+    fun = input("Ingresa la función a evaluar en formato simbolico: ");
     %punto 1
     %Derivada del polinomio interpolador de Newton de grado N
     %para aproximar numéricamente f'(t0)
@@ -102,15 +102,12 @@ if(opc == 1)
     %diferencias finitas
     Sgrafica=(ev-x(1))/h;
 
-    fun2 = @(x) -sin(x);
     %Grafica de los datos experimentales y el polinomio obtenido
     polevaluado=polfinal(ev);
     polevalderv=poldervfinal(ev);
     fplot(fun,[-0.5,1.5],'r')
     grid on
     axis([0 1.2 -1 1])
-    hold on
-    fplot(fun2,[-0.5,1.5],'m')
     hold on
     plot(ev,polevaluado,'b')
     hold on
@@ -149,16 +146,39 @@ for k=1:1:m-1
 end
 
 
-
-
 %Se aplica la fórmula del método del trapecio compuesto: (h/2)*((f0+fm)+2*(f1+f2+f3+...+fm-1))
 T=double(h/2*(f(a)+f(b)+2*sum));
+%Se crea la matriz para graficar el área bajo la curva
+M=zeros(n,2);
+for i=1:n
+    for j=1:2
+    M(1,1)=a;    
+M(n,1)=b;
+M(2:n-1,1)=x;
+M(1,2)=f(a);
+M(n,2)=f(b);
+M(2:n-1,2)=y;
+end
+    end
+
 syms x
 %Se calcula el valor real solucionando la integral definida
 R=double(int(f,x,a,b));
 %Se imprime la solución aproximada y la solución analítica
-fprintf('El área aproximada bajo la curva es: %10.15f',T);
+fprintf('El área aproximada bajo la curva es: %10.15f ',T);
 fprintf('El real bajo la curva es: %10.15f',R);
+
+%Se grafica el área bajo la curva en el intervalo [a,b]
+abcisas=a:0.01:b;
+fun=subs(f,abcisas);
+area(abcisas,fun)
+xlabel ('x')
+ylabel('y')
+title('Área bajo la curva')
+hold on
+plot(M(:,1),M(:,2), 'r');
+hold on
+legend('Area', 'Aproximación');
 
     %----------Punto 3, metodo de Simpson-----------
     elseif(met == 2)
