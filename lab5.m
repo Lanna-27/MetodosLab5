@@ -126,7 +126,7 @@ end
 M=zeros(n,2);
 
 
-%Se aplica la fórmula del método del trapecio: (h/2)*((f0+fm)+2*(f1+f2+f3+...+fm-1))
+%Se aplica la fórmula del método del trapecio compuesto: (h/2)*((f0+fm)+2*(f1+f2+f3+...+fm-1))
 T=double(h/2*(f(a)+f(b)+2*sum));
 %Se calcula el valor real solucionando la integral definida
 %R=double(int(f,a,b));
@@ -146,7 +146,7 @@ n=input('Ingrese el número de nodos:');
 m=(n-1);
 h=(b-a)/m; %Se calcula el parámetro h
 
-%Se separan los términos de la sumatorias de los térinos pares e impares de la ecuación general y se
+%Se separan los términos de la sumatorias de los términos pares e impares de la ecuación general y se
 %inicializan
 si=0;
 sp=0; 
