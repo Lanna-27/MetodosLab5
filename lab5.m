@@ -118,7 +118,7 @@ if(opc == 1)
     xlabel('Rad')
     ylabel('F(x)')
     title('Derivación')
-    legend('Datos reales', 'Derivada real','Interpolación','Derivada','Location','southwest')
+    legend('Datos reales', 'Interpolación','Derivada','Location','southwest')
 
 
 %----PUNTOS 2 Y 3 (integración)--------
@@ -206,6 +206,18 @@ for k=1:1:m-1
         sp=sp+y(k);%sumatoria términos pares
     end
 end
+%Se crea la matriz para graficar el área bajo la curva
+M=zeros(n,2);
+for i=1:n
+    for j=1:2
+    M(1,1)=a;    
+M(n,1)=b;
+M(2:n-1,1)=x;
+M(1,2)=f(a);
+M(n,2)=f(b);
+M(2:n-1,2)=y;
+end
+    end
 %Se aplica la fórmula del método de simpson compuesto:
 %(h/3)*((f0+fm)+4*(f1+f3+f5+...+términos impares)+2*(f2+f4+f6...términos pares))
 S=double(h/3*(f(a)+f(b)+4*si+2*sp));
@@ -223,7 +235,10 @@ area(abcisas,fun)
 xlabel ('x')
 ylabel('y')
 title('Área bajo la curva')
-       
+hold on
+plot(M(:,1),M(:,2), 'r');
+hold on
+legend('Area', 'Aproximación');      
 
     end
 end
