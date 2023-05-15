@@ -148,16 +148,17 @@ for k=1:1:m-1
     sum=sum+y(k);
 end
 
-M=zeros(n,2);
+
 
 
 %Se aplica la fórmula del método del trapecio compuesto: (h/2)*((f0+fm)+2*(f1+f2+f3+...+fm-1))
 T=double(h/2*(f(a)+f(b)+2*sum));
+syms x
 %Se calcula el valor real solucionando la integral definida
-%R=double(int(f,a,b));
+R=double(int(f,x,a,b));
 %Se imprime la solución aproximada y la solución analítica
 fprintf('El área aproximada bajo la curva es: %10.15f',T);
-%fprintf('El real bajo la curva es: %10.15f',R);
+fprintf('El real bajo la curva es: %10.15f',R);
 
     %----------Punto 3, metodo de Simpson-----------
     elseif(met == 2)
@@ -188,11 +189,12 @@ end
 %Se aplica la fórmula del método de simpson compuesto:
 %(h/3)*((f0+fm)+4*(f1+f3+f5+...+términos impares)+2*(f2+f4+f6...términos pares))
 S=double(h/3*(f(a)+f(b)+4*si+2*sp));
+syms x
 %Se calcula el valor real solucionando la integral definida
-%R=double(int(f,a,b));
+R=double(int(f,x,a,b));
 %Se imprime la solución aproximada y la solución analítica
 fprintf('El área aproximada bajo la curva es: %10.15f',S);
-%fprintf('El real bajo la curva es: %10.15f',R);
+fprintf('El real bajo la curva es: %10.15f',R);
 
 %Se grafica el área bajo la curva en el intervalo [a,b]
 abcisas=a:0.01:b;
