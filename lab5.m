@@ -105,9 +105,78 @@ elseif(opc == 2)
     
     %----------Punto 2, metodo del trapecio-----------
     if(met == 1)
+        %Se solicitan los datos necesarios para resolver el problema
+
+f=input('Ingrese la función f(x)='); % f=@(x) 
+a=input('Ingrese el límite inferior de la integral:');
+b=input('Ingrese el límite superior de la integral:');
+n=input('Ingrese el número de nodos:');
+
+m=n-1;
+h=(b-a)/m; %Se calcula el parámetro h
+sum=0; %Se separa el término de la sumatoria de la ecuación general y se inicializa
+
+%Se evaluan los términos de la sumatoria desde el nodo x1 hasta x_(m-1)
+for k=1:1:m-1
+    x(k)=a+k*h; %Se calculan los xk
+    y(k)=f(x(k));
+    sum=sum+y(k);
+end
+
+M=zeros(n,2);
+
+
+%Se aplica la fórmula del método del trapecio: (h/2)*((f0+fm)+2*(f1+f2+f3+...+fm-1))
+T=double(h/2*(f(a)+f(b)+2*sum));
+%Se calcula el valor real solucionando la integral definida
+%R=double(int(f,a,b));
+%Se imprime la solución aproximada y la solución analítica
+fprintf('El área aproximada bajo la curva es: %10.15f',T);
+%fprintf('El real bajo la curva es: %10.15f',R);
 
     %----------Punto 3, metodo de Simpson-----------
     elseif(met == 2)
+        %Se solicitan los datos necesarios para resolver el problema
+
+f=input('Ingrese la función f(x)='); % f=@(x) 
+a=input('Ingrese el límite inferior de la integral:');
+b=input('Ingrese el límite superior de la integral:');
+n=input('Ingrese el número de nodos:');
+
+m=(n-1);
+h=(b-a)/m; %Se calcula el parámetro h
+
+%Se separan los términos de la sumatorias de los térinos pares e impares de la ecuación general y se
+%inicializan
+si=0;
+sp=0; 
+%Se evaluan los términos de las sumatorias 
+for k=1:1:m-1
+    x(k)=a+k*h; %Se calculan los xk
+    y(k)=f(x(k));
+    if rem(k,2)==1 %Se separan los términos impares y se realiza la sumatoria
+        si=si+y(k);
+    else
+        sp=sp+y(k);%sumatoria términos pares
+    end
+end
+%Se aplica la fórmula del método de simpson compuesto:
+%(h/3)*((f0+fm)+4*(f1+f3+f5+...+términos impares)+2*(f2+f4+f6...términos pares))
+S=double(h/3*(f(a)+f(b)+4*si+2*sp));
+%Se calcula el valor real solucionando la integral definida
+%R=double(int(f,a,b));
+%Se imprime la solución aproximada y la solución analítica
+fprintf('El área aproximada bajo la curva es: %10.15f',S);
+%fprintf('El real bajo la curva es: %10.15f',R);
+
+%Se grafica el área bajo la curva en el intervalo [a,b]
+abcisas=a:0.01:b;
+fun=subs(f,abcisas);
+area(abcisas,fun)
+xlabel ('x')
+ylabel('y')
+title('Área bajo la curva')
+       
 
     end
 end
