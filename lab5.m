@@ -23,47 +23,58 @@ if(opc == 1)
 
     % f = fun(x);
 
-    xderv=[t0, t1, t2];
+    x=[t0, t1, t2];
 
-    f=fun(xderv);
+    n=length(x);
+
+    f=fun(x);
 
     %Se crea la matriz de ceros para crear la tabla de diferencias finitas
-    b=zeros(3);
+    A=zeros(n,n);
     %Se ponen como primera columna el valor de las ordenadas
-    b(:,1)=f';
+    A(1:n,1)=f;
+    %Se calcula la diferencia entre dos puntos consecutivos de las abscisas
+    %h=x1(2)-x1(1);
 
-    %Se construye la tabla de diferencias finitas
-    for j=2:3
-        for i=j:3
-            b(i,j)=(b(i,j-1)-b(i-1,j-1));
+    %Se construye la tabla de diferencias divididas
+    for J=2:n
+        J1=J-1;
+        for K=1:(n-J1)
+            A(K,J)=(A(K+1,J1)-A(K,J1))/(x(K+J1)-x(K));
         end
     end
+    A
 
     %Calculo del dato interpolado ( productoria)
     fprintf('\nLa matriz de diferencias dividas es : ')
     %Se enumeran las filas en la tabla de resultados
-    num=[0:1:3-1];
-    M=[num' x' b];
+    num=[0:1:n-1];
+    M=[num' x' A];
     array2table(M,'VariableNames',{'Punto','Xi','f(Xi)','Δƒ[xi]','Δƒ²[xi]'})
 
+    coef = A(1,1:n);
+    X=[x(1):0.1:x(n)];
+    nd=length(X);
     %Construccion del polinomio interpolador con base en el pivote y
     %la tabla de diferencias
     syms s
     %Se inicializa el primer valor para el polinomio junto a la productoria
-    polsig=M(1,3);
+    polsig=coef(1);
     produ=1;
-    polderv=bderv(2,2);
+    polderv=coef(2);
     prodderv = 1;
+    P = zeros(nd,0);
     %Se crea el polinomio de grado n-1
-    for i=1:(3-1)
+    for i=1:n-1
         %polinomio interpolado
-        produ=produ*(s-i+1)/factorial(i);
-        polsig=polsig+produ*M(i+1,i+3);
+        produ=produ*(s-x(i));
+        polsig=polsig+produ*coef(i+1);
         
-        if i<n-1
-        prodderv=prodderv*(s-i+2)/factorial(i);
-
-        
+        if i>1
+            prodderv=prodderv*(s-x(i));
+            polderv=polderv+prodderv*coef(i+1);
+            
+        end    
     end
 
     %Se imprime el polinomio construido
@@ -80,7 +91,7 @@ if(opc == 1)
     polfinal=inline(polexp);
     poldervfinal=inline(polder); 
     %Calculo del valor 'a' a interpolar
-    Seval=(t0-xderv(1))/h;
+    Seval=t0/h;
     fprintf('\nEl valor del punto %.3f es : ',t0)
     poldervfinal(t0)
 
@@ -90,28 +101,27 @@ if(opc == 1)
     %Se convierten los valores x1 correspondiente al método de
     %diferencias finitas
     Sgrafica=(ev-x(1))/h;
-    Sgraficaderv=(ev-xderv(1))/h;
 
     fun2 = @(x) -sin(x);
     %Grafica de los datos experimentales y el polinomio obtenido
-    polevaluado=polfinal(Sgrafica);
-    polevalderv=poldervfinal(Sgraficaderv);
+    polevaluado=polfinal(ev);
+    polevalderv=poldervfinal(ev);
     fplot(fun,[-0.5,1.5],'r')
     grid on
     axis([0 1.2 -1 1])
     hold on
-    fplot(fun2,[-0.5,1.5],'r')
+    fplot(fun2,[-0.5,1.5],'m')
     hold on
     plot(ev,polevaluado,'b')
     hold on
     plot(ev,polevalderv, "g")
     hold on
-    plot(t0,polfinal(Seval),'r.','markersize',12)
+    plot(t0,poldervfinal(t0),'k.','markersize',12)
     hold on
     xlabel('Rad')
     ylabel('F(x)')
     title('Derivación')
-    legend('Datos reales','Interpolación','Derivada','Location','southwest')
+    legend('Datos reales', 'Derivada real','Interpolación','Derivada','Location','southwest')
 
 
 %----PUNTOS 2 Y 3 (integración)--------
