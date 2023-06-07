@@ -33,131 +33,131 @@ hlong=length(hin);
 
 for n=1:hlong
    
-syms t y u z v
+    syms t y u z v
 
-h=hin(n);    
-tinf=intervalo(1,1);
-tsup=intervalo(1,2);
+    h=hin(n);    
+    tinf=intervalo(1,1);
+    tsup=intervalo(1,2);
 
-u1=alpha;
-u2=0;
-v1=0;
-v2=1;
-M=(tsup-tinf)/h;
-U=zeros(1,M+1);
-V=zeros(1,M+1);
+    u1=alpha;
+    u2=0;
+    v1=0;
+    v2=1;
+    M=(tsup-tinf)/h;
+    U=zeros(1,M+1);
+    V=zeros(1,M+1);
 
-%Solucion primera ecuación diferencial ordinaria de forma U(t)
+    %Solucion primera ecuación diferencial ordinaria de forma U(t)
 
-T=zeros(1,M+1);
+    T=zeros(1,M+1);
 
-for j=1:M+1
-T(1,j)=tinf+(j-1)*h;
-end
+    for j=1:M+1
+        T(1,j)=tinf+(j-1)*h;
+    end
 
-U(1,1)=alpha;
-Y=zeros(1,M+1);
-Y(1,1)=u2;
-yf=y;
-uf=u;
+    U(1,1)=alpha;
+    Y=zeros(1,M+1);
+    Y(1,1)=u2;
+    yf=y;
+    uf=u;
 
-for i=2:M+1
-    
-    y=Y(1,i-1);
-    u=U(1,i-1);
-    t=T(1,i-1);
-    
-    g1=eval(p)*eval(yf)+eval(q)*eval(uf)+eval(r);
-    f1=eval(yf);
-    
-    y=Y(1,i-1)+(h/2)*g1;
-    u=U(1,i-1)+(h/2)*f1;
-    t=T(1,i-1)+(h/2);
-    
-    g2=eval(p)*eval(yf)+eval(q)*eval(uf)+eval(r);
-    f2=eval(yf);
-    
-    y=Y(1,i-1)+(h/2)*g2;
-    u=U(1,i-1)+(h/2)*f2;
-    t=T(1,i-1)+(h/2); 
-    
-    g3=eval(p)*eval(yf)+eval(q)*eval(uf)+eval(r);
-    f3=eval(yf);
-    
-    y=Y(1,i-1)+(h/1)*g3;
-    u=U(1,i-1)+(h/1)*f3;
-    t=T(1,i-1)+(h/1); 
-    
-    g4=eval(p)*eval(yf)+eval(q)*eval(uf)+eval(r);
-    f4=eval(yf);
-    
-    U(1,i)=U(1,i-1)+(h/6)*(f1+2*f2+2*f3+f4);
-    Y(1,i)=Y(1,i-1)+(h/6)*(g1+2*g2+2*g3+g4);
-     
-end    
+    for i=2:M+1
+        
+        y=Y(1,i-1);
+        u=U(1,i-1);
+        t=T(1,i-1);
+        
+        g1=eval(p)*eval(yf)+eval(q)*eval(uf)+eval(r);
+        f1=eval(yf);
+        
+        y=Y(1,i-1)+(h/2)*g1;
+        u=U(1,i-1)+(h/2)*f1;
+        t=T(1,i-1)+(h/2);
+        
+        g2=eval(p)*eval(yf)+eval(q)*eval(uf)+eval(r);
+        f2=eval(yf);
+        
+        y=Y(1,i-1)+(h/2)*g2;
+        u=U(1,i-1)+(h/2)*f2;
+        t=T(1,i-1)+(h/2); 
+        
+        g3=eval(p)*eval(yf)+eval(q)*eval(uf)+eval(r);
+        f3=eval(yf);
+        
+        y=Y(1,i-1)+(h/1)*g3;
+        u=U(1,i-1)+(h/1)*f3;
+        t=T(1,i-1)+(h/1); 
+        
+        g4=eval(p)*eval(yf)+eval(q)*eval(uf)+eval(r);
+        f4=eval(yf);
+        
+        U(1,i)=U(1,i-1)+(h/6)*(f1+2*f2+2*f3+f4);
+        Y(1,i)=Y(1,i-1)+(h/6)*(g1+2*g2+2*g3+g4);
+        
+    end    
 
-U;
-Y;
+    U;
+    Y;
 
-%Solución segunda ecuación diferencial ordinaria de forma v(t)
+    %Solución segunda ecuación diferencial ordinaria de forma v(t)
 
-V(1,1)=v1;
-Z=zeros(1,M+1);
-Z(1,1)=v2;
-zf=z;
-vf=v;
+    V(1,1)=v1;
+    Z=zeros(1,M+1);
+    Z(1,1)=v2;
+    zf=z;
+    vf=v;
 
-for j=2:M+1
-    
-    z=Z(1,j-1);
-    v=V(1,j-1);
-    t=T(1,j-1);
-    
-    g1=eval(p)*eval(zf)+eval(q)*eval(vf);
-    f1=eval(zf);
-    
-    z=Z(1,j-1)+(h/2)*g1;
-    v=V(1,j-1)+(h/2)*f1;
-    t=T(1,j-1)+(h/2);
-    
-    g2=eval(p)*eval(zf)+eval(q)*eval(vf);
-    f2=eval(zf);
-    
-    z=Z(1,j-1)+(h/2)*g2;
-    v=V(1,j-1)+(h/2)*f2;
-    t=T(1,j-1)+(h/2); 
-    
-    g3=eval(p)*eval(zf)+eval(q)*eval(vf);
-    f3=eval(zf);
-    
-    z=Z(1,j-1)+(h/1)*g3;
-    v=V(1,j-1)+(h/1)*f3;
-    t=T(1,j-1)+(h/1); 
-    
-    g4=eval(p)*eval(zf)+eval(q)*eval(vf);
-    f4=eval(zf);
-    
-    V(1,j)=V(1,j-1)+(h/6)*(f1+2*f2+2*f3+f4);
-    Z(1,j)=Z(1,j-1)+(h/6)*(g1+2*g2+2*g3+g4);
-     
-end
-V;
-Z;
+    for j=2:M+1
+        
+        z=Z(1,j-1);
+        v=V(1,j-1);
+        t=T(1,j-1);
+        
+        g1=eval(p)*eval(zf)+eval(q)*eval(vf);
+        f1=eval(zf);
+        
+        z=Z(1,j-1)+(h/2)*g1;
+        v=V(1,j-1)+(h/2)*f1;
+        t=T(1,j-1)+(h/2);
+        
+        g2=eval(p)*eval(zf)+eval(q)*eval(vf);
+        f2=eval(zf);
+        
+        z=Z(1,j-1)+(h/2)*g2;
+        v=V(1,j-1)+(h/2)*f2;
+        t=T(1,j-1)+(h/2); 
+        
+        g3=eval(p)*eval(zf)+eval(q)*eval(vf);
+        f3=eval(zf);
+        
+        z=Z(1,j-1)+(h/1)*g3;
+        v=V(1,j-1)+(h/1)*f3;
+        t=T(1,j-1)+(h/1); 
+        
+        g4=eval(p)*eval(zf)+eval(q)*eval(vf);
+        f4=eval(zf);
+        
+        V(1,j)=V(1,j-1)+(h/6)*(f1+2*f2+2*f3+f4);
+        Z(1,j)=Z(1,j-1)+(h/6)*(g1+2*g2+2*g3+g4);
+        
+    end
+    V;
+    Z;
 
-X=zeros(1,M+1);
+    X=zeros(1,M+1);
 
-for k=1:M+1
-    X(1,k)=U(1,k)+((beta-U(1,M+1))/V(1,M+1))*V(1,k);
-end
+    for k=1:M+1
+        X(1,k)=U(1,k)+((beta-U(1,M+1))/V(1,M+1))*V(1,k);
+    end
 
-X';
-W=X-U;
+    X';
+    W=X-U;
 
-if n==1
-Matriz=[T' X' W'];
-else
-Matriz2=[T' X' W'];
-end
+    if n==1
+        Matriz=[T' X' W'];
+    else
+        Matriz2=[T' X' W'];
+    end
 
 end
 
@@ -191,15 +191,29 @@ errorF2=[0;errorF2;0];
 Mfinal=[Matriz(:,1) Matriz(:,2) X2F Xexacto1 error1 errorF2];
 array2table(Mfinal,'VariableNames',{'tj','xj(h=0.2)','xj(h=0.1)','x exacto','error(h=0.2)','error(h=0.1)'})
 
+f1=figure
 subplot(1,2,1)
 plot(T,X,'r')
 hold on
 plot(T,W,'g')
 hold on
 plot(T,U,'b')
-subplot(1,2,2)
+grid on
+hold on
+xlabel('t')
+ylabel('y')
+title('Disparo lineal aproximaciones')
+legend('X(t)', 'error','U(t)','Location','southwest')
+
+f2=figure
+subplot(1,2,1)
 plot(T,Xexacto2,'c')
 grid on
+hold on
+xlabel('t')
+ylabel('y')
+title('Disparo lineal resultado real')
+legend('X(t)', 'error','U(t)','Location','southwest')
 %por hacer: poner nombres a los ejes de las graficas, hacer que la grafica
 %de la solucion real este en otro recuadro puesto se superpone a la
 %solucion calculada con matlab y ponerle nombre a cada una de la curvas 
