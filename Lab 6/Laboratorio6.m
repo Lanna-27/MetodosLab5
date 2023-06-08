@@ -10,10 +10,10 @@ syms t y u z v;
 %método del disparo lineal y el método de las diferencias finitas 
 op=input('Ingrese 1 para el método del disparo lineal y 2 para el método de las diferencias finitas: ');
 
-P=input('ingrese la función P(t): ');
-Q=input('ingrese la función q(t): ');
-R=input('ingrese la función r(t): ');
-SOL=input('en caso de conocer la solución x(t) ingresela: ');
+P=input('ingrese la función p(t) en formato anónimo: ');
+Q=input('ingrese la función q(t) en formato anónimo: ');
+R=input('ingrese la función r(t) en formato anónimo: ');
+SOL=input('en caso de conocer la solución x(t) ingresela en formato anónimo: ');
 intervalo=input('ingrese el intervalo de trabajo: ');
 hin=input('ingrese el tamaño de paso h: ');
 alpha=input('ingrese el valor de alpha: ');
@@ -23,14 +23,18 @@ hlong=length(hin);
 if(op == 1)
     %En caso de que el valor suministrado sea igual a 1 se procede con el
     %método del disparo lineal de Runge-Kutta de orden N=4
-    %x(t)=1.25+0.4860896526*t-(2.25*t.^2)+(2*t.*atan(t))+(1/2).*(t.^2-1).*(log(1+t.^2))
-    %p(t)=(2*t)/(1+t^2)
-    %q(t)=(-2)/(1+t^2)
-    %r(t)=1
-    %h=[0.2 0.1]
+    %------Entradas-------
+    %@(t) (2*t)/(1+t^2)
+    %@(t) (-2)/(1+t^2)
+    %1
+    %@(t) 1.25+0.4860896526*t-(2.25*t.^2)+(2*t.*atan(t))+(1/2).*(t.^2-1).*(log(1+t.^2))
     %[0 4]
+    %[0.2 0.1]
     %alpha=1.25
     %beta=-0.95
+
+    disp('Método 1: Método del disparo lineal');
+    disp('-------------------------------');
 
     for n=1:hlong
 
@@ -223,6 +227,9 @@ elseif(op == 2)
     %[0 4]
     %alpha=1.25
     %beta=-0.95
+
+    disp('Metodo 2: Metodo de diferencias finitas');
+    disp('----------------------------------');
 
     % for n=1:hlong
 
