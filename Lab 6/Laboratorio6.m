@@ -3,8 +3,8 @@ clear
 clc
 clf('reset')
 
-format long;
-syms t y u z v;
+format long
+syms t
 
 %Con el fin de realizar solo un programa, se da la opción de escoger el 
 %método del disparo lineal y el método de las diferencias finitas 
@@ -69,29 +69,29 @@ if(op == 1)
             u=U(1,i-1);
             t=T(1,i-1);
             
-            g1=subs(P,t)*y+subs(Q,t)*u+subs(R);
-            f1=y;
+            g1=double(subs(P,t)*y+subs(Q,t)*u+subs(R));
+            f1=double(y);
             
             y=Y(1,i-1)+(h/2)*g1;
             u=U(1,i-1)+(h/2)*f1;
             t=T(1,i-1)+(h/2);
             
-            g2=subs(P,t)*y+subs(Q,t)*u+subs(R);
-            f2=y;
+            g2=double(subs(P,t)*y+subs(Q,t)*u+subs(R));
+            f2=double(y);
             
             y=Y(1,i-1)+(h/2)*g2;
             u=U(1,i-1)+(h/2)*f2;
             t=T(1,i-1)+(h/2); 
             
-            g3=subs(P,t)*y+subs(Q,t)*u+subs(R);
-            f3=y;
+            g3=double(subs(P,t)*y+subs(Q,t)*u+subs(R));
+            f3=double(y);
             
             y=Y(1,i-1)+(h/1)*g3;
             u=U(1,i-1)+(h/1)*f3;
             t=T(1,i-1)+(h/1); 
             
-            g4=subs(P,t)*y+subs(Q,t)*u+subs(R);
-            f4=y;
+            g4=double(subs(P,t)*y+subs(Q,t)*u+subs(R));
+            f4=double(y);
             
             U(1,i)=U(1,i-1)+(h/6)*(f1+2*f2+2*f3+f4);
             Y(1,i)=Y(1,i-1)+(h/6)*(g1+2*g2+2*g3+g4);
@@ -113,29 +113,29 @@ if(op == 1)
             v=V(1,j-1);
             t=T(1,j-1);
             
-            g1=subs(P,t)*z+subs(Q,t)*v;
-            f1=z;
+            g1=double(subs(P,t)*z+subs(Q,t)*v);
+            f1=double(z);
             
             z=Z(1,j-1)+(h/2)*g1;
             v=V(1,j-1)+(h/2)*f1;
             t=T(1,j-1)+(h/2);
             
-            g2=subs(P,t)*z+subs(Q,t)*v;
-            f2=z;
+            g2=double(subs(P,t)*z+subs(Q,t)*v);
+            f2=double(z);
             
             z=Z(1,j-1)+(h/2)*g2;
             v=V(1,j-1)+(h/2)*f2;
             t=T(1,j-1)+(h/2); 
             
-            g3=subs(P,t)*z+subs(Q,t)*v;
-            f3=z;
+            g3=double(subs(P,t)*z+subs(Q,t)*v);
+            f3=double(z);
             
             z=Z(1,j-1)+(h/1)*g3;
             v=V(1,j-1)+(h/1)*f3;
             t=T(1,j-1)+(h/1); 
             
-            g4=subs(P,t)*z+subs(Q,t)*v;
-            f4=z;
+            g4=double(subs(P,t)*z+subs(Q,t)*v);
+            f4=double(z);
             
             V(1,j)=V(1,j-1)+(h/6)*(f1+2*f2+2*f3+f4);
             Z(1,j)=Z(1,j-1)+(h/6)*(g1+2*g2+2*g3+g4);
@@ -147,7 +147,7 @@ if(op == 1)
         X=zeros(1,M+1);
 
         for k=1:M+1
-            X(1,k)=U(1,k)+((beta-U(1,M+1))/V(1,M+1))*V(1,k);
+            X(1,k)=double(U(1,k)+((beta-U(1,M+1))/V(1,M+1))*V(1,k));
         end
         
         W=X-U;
@@ -223,59 +223,65 @@ elseif(op == 2)
     %p(t)=(2*t)/(1+t^2)
     %q(t)=(-2)/(1+t^2)
     %r(t)=1
-    %h=[0.2 0.1 0.05 0.025]
-    %[0 4]
-    %alpha=1.25
+    %hs=[0.2 0.1 0.05 0.025]
+    %intervalo = [0 4]
+    %alpha=1.25   
     %beta=-0.95
 
     disp('Metodo 2: Metodo de diferencias finitas');
     disp('----------------------------------');
 
-    % for n=1:hlong
+    for n=1:hlong
 
-    %     syms t y u z v
+        h=hin(n);    
+        tinf=intervalo(1);
+        tsup=intervalo(2);
+        M=(tsup-tinf)/h;
 
-    %     h=hin(n);    
-    %     tinf=intervalo(1,1);
-    %     tsup=intervalo(1,2);
-    %     M=(tsup-tinf)/h;
+        T=zeros(1,M+1);
 
-    %     b=zeros(1,M+1);
-    %     inferior = zeros(M+1);
-    %     principal = zeros(M+1);
-    %     superior = zeros(M+1);
+        for j=1:M+1
+            T(1,j)=tinf+(j-1)*h;
+        end
+
+        %Usamos los siguientes vectores para crear el sistema de ecuaciones de las diapositivas
+        B = zeros(1,M+1);
+        I = zeros(M+1, 1);
+        P = zeros(M+1, 1);
+        S = zeros(M+1, 1);
+
+        P(1,1)=0;
 
     %     inferior[j+1,j+1] =
 
-    %     for j = 1:M+1
-    %         A = [tinf:h:tsup];
-    %         inferior[j+1,j+1] = (-h/2)*p(A[j])-1;
-    %         principal = 2+h^2*q(A[j]);
-    %         superior = (h/2)*p(A[j])-1;
+        for j = 1:M+1
 
-    %         if j==1
-    %             res = -h^2*r(A[j])+((h/2)*p(A[j])+1)*alpha;
-    %         elseif j==M+1
-    %             res = -h^2*r(A[j]);
-    %         else
-    %             res = -h^2*r(A[j])+((-h/2)*p(A[j])+1)*beta;
-    %         end
+            t = T(1,j);
+            %Preparamos las diagonales para crear la matriz triangular
+            P(j,1) = double( 2+h^2*subs(Q,t));
+            if j~=1
+                I(j-1,1) = double((-h/2)*subs(P,t)-1);
+            end
+            if j~=M+1
+                S(j+1,1) = double((h/2)*subs(P,t)-1);
+            end
 
-    %         T = spdiags([inferior principal superior],[-1 0 1], M+1, M+1)
-    %     end    
-    % end
+            %Se plantean las ecuaciones del método
+            if j==1
+                b(1,1) = double(-h^2*subs(R,t)+((h/2)*subs(P,t)+1)*alpha);
+            elseif j==M+1
+                b(j,1) = double(-h^2*subs(R,t));
+            else
+                b(j,1) = double(-h^2*subs(R,t)+((-h/2)*subs(P,t)+1)*beta);
+            end
+        end
+        I(n-1,1)=0;
+        A = spdiags([I, P, S],[-1; 0; 1], M+1, M+1)
+
+        b
+    end
     
 end
-
-% clf
-% clear
-% clc
-% pkg load symbolic
-% warning("off","OctSymPy:sym:rationalapprox")
-
-% %Damos formato largo a los numeros que se van a mostrar y declaramos t como una variable simbolica
-% format long
-% syms t
 
 % %x(t)=1.25+0.4860896526*t-(2.25*t.^2)+(2*t.*atan(t))+(1/2).*(t.^2-1).*(log(1+t.^2))
 % %p(t)=(2*t)/(1+t^2)
