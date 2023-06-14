@@ -38,6 +38,9 @@ if(op == 1)
 
     for n=1:hlong
 
+        Matriz = [];
+        Matriz2 = [];
+
         h=hin(n);    
         tinf=intervalo(1,1);
         tsup=intervalo(1,2);
@@ -173,10 +176,16 @@ if(op == 1)
     R2=[Matriz2 Xexacto2 error2];
 
     %Impresión de los resultados 
-    fprintf('\nLos resultados con h=0.2 son\n:')
-    array2table(R1,'VariableNames',{'tj','xj','x exacto','error'})
-    fprintf('\nLos resultados con h=0.1 son\n:')
-    array2table(R2,'VariableNames',{'tj','xj','x exacto','error'})
+    if(hlong == 1)
+        fprintf('\nLos resultados con h=0.2 son\n:')
+        array2table(R1,'VariableNames',{'tj','xj','x exacto','error'})
+    elseif(hlong == 2)
+        fprintf('\nLos resultados con h=0.2 son\n:')
+        array2table(R1,'VariableNames',{'tj','xj','x exacto','error'})
+
+        fprintf('\nLos resultados con h=0.1 son\n:')
+        array2table(R2,'VariableNames',{'tj','xj','x exacto','error'})
+    end
 
     T2long=length(Matriz2(:,1));
     X2=Matriz2(:,2);
@@ -187,8 +196,14 @@ if(op == 1)
     X2F=[alpha;X2F;beta];
     errorF2=[0;errorF2;0];
 
-    Mfinal=[Matriz(:,1) Matriz(:,2) X2F Xexacto1 error1 errorF2];
-    array2table(Mfinal,'VariableNames',{'tj','xj(h=0.2)','xj(h=0.1)','x exacto','error(h=0.2)','error(h=0.1)'})
+    fprintf("Aproximaciones numericas de x''(t)\n")
+    if(hlong == 1)
+        Mfinal=[Matriz(:,1) Matriz(:,2) Xexacto1 error1];
+        array2table(Mfinal,'VariableNames',{'tj','xj(h=0.2)','x exacto','error(h=0.2)'})
+    elseif(hlong == 2)
+        Mfinal=[Matriz(:,1) Matriz(:,2) X2F Xexacto1 error1 errorF2];
+        array2table(Mfinal,'VariableNames',{'tj','xj(h=0.2)','xj(h=0.1)','x exacto','error(h=0.2)','error(h=0.1)'})
+    end
 
     subplot(1,2,1)
     plot(T,X,'r')
@@ -201,7 +216,7 @@ if(op == 1)
     plot(T,Xexacto2,'co')
     hold on
     xlabel('t')
-    ylabel('y')
+    ylabel('y''(t)')
     title('Disparo lineal aproximaciones')
     legend('X(t)', 'error','U(t)','X(t) exacto','Location','southwest')
 
@@ -211,7 +226,7 @@ if(op == 1)
     grid on
     hold on
     xlabel('t')
-    ylabel('y')
+    ylabel('y''(t)')
     title('Disparo lineal resultado real')
     legend('X(t) exacto','Location','southwest')
 
@@ -249,7 +264,7 @@ elseif(op == 2)
         end
     end
 
-    %Creamos nuestra matriz tridiagonal teniendo en cuenta las ecuaciones para p y q
+    %Crea matriz tridiagonal de las diapositivas para representar las ecuaciones para p y q
     diagP=[];
     diagI=[];
     diagS=[];
@@ -257,7 +272,7 @@ elseif(op == 2)
     for i=1:n-1
         diagP(i,1) = double( 2+hin(j)^2*subs(Q,T(i+1)));
         if i~=1
-        diagI(i-1,1) =double( (-hin(j)/2)*subs(P,T(i+1))-1);
+        diagI(i-1,1) = double( (-hin(j)/2)*subs(P,T(i+1))-1);
         end
         if i~=n-1
         diagS(i+1,1) = double((hin(j)/2)*subs(P,T(i+1))-1);
@@ -266,7 +281,7 @@ elseif(op == 2)
     diagI(n-1,1)=0;
     A=spdiags([diagI, diagP, diagS],[-1;0;1],n-1,n-1);
 
-    %Multiplicamos nuestra matriz trdagonal con nuestra otra matrz para opivotebtener los valores de las aproximaciones de x
+    %Resolvemos el sistema de ecuaciones
     X = A\B;
 
     %Teniendo en cuenta la cantidad de h que haya ingresado el usuario se arma la tabla de aproximaciones
@@ -292,7 +307,7 @@ elseif(op == 2)
     tabla = horzcat(tj,tab,xj);
 
     %Imprimos el encabezado de la tabla y despues mostramos la tabla de aproxmaciones
-    fprintf("TABLA: APROXIMACIONES NÚMERICAS DE x''(t)\n")
+    fprintf("Aproximaciones numericas de x''(t)\n")
     if length(hin)==1
     fprintf("   tj\t\t       h=0.2\t\t   exacto\n")
     elseif length(hin)==2
@@ -313,7 +328,7 @@ elseif(op == 2)
     errores = horzcat(tj,errores);
 
     %Imprimos el encabezado de la tabla y despues mostramos la tabla de errores
-    fprintf("TABLA: ERRORES DE LAS APROXIMACIONES NÚMERICAS OBTENIDAS CON EL MÉTODO DE DIFERENCIAS FINITAS\n")
+    fprintf("Errores de las aproximaciones numericas\n")
     if length(hin)==1
     fprintf("   tj\t\t       x(tj)-xj1\n")
     elseif length(hin)==2
@@ -340,7 +355,7 @@ elseif(op == 2)
     end
     hold off
     legend(legends);
-    title("APROXIMACIÓN NÚMERICA A LA SOLUCIÓN DE LA ECUACIÓN x''(t)")
+    title("Aproximación numérica a la solución de x''(t)")
     xlabel("tj")
     ylabel("x''(t)")
     legends = legends(1:end-1);
@@ -352,163 +367,9 @@ elseif(op == 2)
     plot(errores(:,1),errores(:,i));
     end
     hold off
-    title("ERRORES DE LAS APROXIMACIONES NÚMERICAS POR EL MÉTODO DE DIFERENCIAS FINITAS");
+    title("Errores de las aproximaciones numéricas");
     xlabel("tj");
     ylabel("x(tj)");
     legend(legends);
     
 end
-
-% %x(t)=1.25+0.4860896526*t-(2.25*t.^2)+(2*t.*atan(t))+(1/2).*(t.^2-1).*(log(1+t.^2))
-% %p(t)=(2*t)/(1+t^2)
-% %q(t)=(-2)/(1+t^2)
-% %r(t)=1
-% #hin=[0.2 0.1 0.05 0.025]
-% %intervalo = [0 4]
-% %alpha=1.25
-% %beta=-0.95
-
-% %Le pedimos al usuario que ingrese los datos de entrada para hacer el calculo con el metodo numerico
-% p=sym(input('ingrese la función P(t): '));
-% q=sym(input('ingrese la función q(t): '));
-% r=sym(input('ingrese la función r(t): '));
-% %p=sym((2*t)/(1+t^2));
-% %q=sym((-2)/(1+t^2));
-% %r=sym(1);
-% hin=input('ingrese los distintos valores de h: ');
-% %hin=[0.1];
-% intervalo=input('ingrese el intervalo de trabajo: ');
-% %intervalo=[0 4];
-% alpha=input('ingrese el valor de alpha: ');
-% %alpha=1.25;
-% beta=input('ingrese el valor de beta: ');
-% %beta=-0.95;
-% B=[];
-% A=[];
-
-% %Inicializamos hmin y hmax con el h mas pequeño y mas grande respectvamente
-% hmin=min(hin);
-% hmax=max(hin);
-
-% %Planteamos las ecuaciones
-% for j=1:length(hin)
-%   T=intervalo(1):hin(j):intervalo(2);
-%   n=length(T)-1;
-%   for i=1:n-1
-%     if i==1
-%       B(1,1) = double( -(hin(j)^2)*subs(r,T(i+1))+ ((hin(j)/2)*subs(p,T(i+1))+1)*alpha);
-%     elseif i==n-1
-%       B(i,1) = double( -(hin(j)^2)*subs(r,T(i+1)) + ((-hin(j)/2)*subs(p,T(i+1))+1)*beta);
-%     else
-%       B(i,1) = double( -(hin(j)^2)*subs(r,T(i+1)) );
-%     endif
-%   end
-
-% %Creamos nuestra matriz tridiagonal teniendo en cuenta las ecuaciones para p y q
-%   diagP=[];
-%   diagI=[];
-%   diagS=[];
-%   diagP(1,1)=0;
-%   for i=1:n-1
-%     diagP(i,1) = double( 2+hin(j)^2*subs(q,T(i+1)));
-%     if i!=1
-%       diagI(i-1,1) =double( (-hin(j)/2)*subs(p,T(i+1))-1);
-%     endif
-%     if i!=n-1
-%       diagS(i+1,1) = double((hin(j)/2)*subs(p,T(i+1))-1);
-%     endif
-%   endfor
-%   diagI(n-1,1)=0;
-%   A=spdiags([diagI, diagP, diagS],[-1;0;1],n-1,n-1);
-
-% %Multiplicamos nuestra matriz trdagonal con nuestra otra matrz para obtener los valores de las aproximaciones de x
-%   X = linsolve(A,B);
-
-% %Teniendo en cuenta la cantidad de h que haya ingresado el usuario se arma la tabla de aproximaciones
-%   for i=intervalo(1):hin(j):intervalo(2)
-%     if(i==intervalo(1))
-%       tab(1,j)=alpha;
-%     elseif(i==intervalo(2))
-%       tab((i-intervalo(1))/hmax+1,j)=beta;
-%     elseif mod((i-intervalo(1)),hmax)==0
-%       tab(int16((i-intervalo(1))/hmax)+1,j)=X(int16(i/hin(j)),1);
-%     endif
-%   end
-% end
-
-% %Damos formato a la tabla para que quede gual a la del ejemplo
-% tj= intervalo(1):hmax:intervalo(2);
-% tj=tj';
-% fun = sym(1.25+0.4860896526*t-(2.25*t.^2)+(2*t.*atan(t))+(1/2).*(t.^2-1).*(log(1+t.^2)));
-% xj = [];
-% for i=1:length(tj)
-%   xj(i,1)=double(subs(fun,tj(i,1)));
-% end
-% tabla = horzcat(tj,tab,xj);
-
-% %Imprimos el encabezado de la tabla y despues mostramos la tabla de aproxmaciones
-% printf("TABLA: APROXIMACIONES NÚMERICAS DE x''(t)\n")
-% if length(hin)==1
-%   printf("   tj\t\t       h=0.2\t\t   exacto\n")
-% elseif length(hin)==2
-%   printf("   tj\t\t       h=0.2\t\t   h=0.1\t       exacto\n")
-% elseif length(hin)==3
-%   printf("   tj\t\t       h=0.2\t\t   h=0.1\t       h=0.05\t\t   exacto\n")
-% else
-%   printf("   tj\t\t       h=0.2\t\t   h=0.1\t       h=0.05\t\t   h=0.025\t       exacto\n")
-% end
-% disp(tabla)
-% printf("\n")
-
-% %Creamos la matriz de errores
-% errores=[];
-% for i=2:length(tabla(1,:))-1
-%   errores(:,i-1)=tabla(:,length(tabla(1,:)))-tabla(:,i);
-% end
-% errores = horzcat(tj,errores);
-
-% %Imprimos el encabezado de la tabla y despues mostramos la tabla de errores
-% printf("TABLA: ERRORES DE LAS APROXIMACIONES NÚMERICAS OBTENIDAS CON EL MÉTODO DE DIFERENCIAS FINITAS\n")
-% if length(hin)==1
-%   printf("   tj\t\t       x(tj)-xj1\n")
-% elseif length(hin)==2
-%   printf("   tj\t\t       x(tj)-xj1\t   x(tj)-xj1\n")
-% elseif length(hin)==3
-%   printf("   tj\t\t       x(tj)-xj1\t   x(tj)-xj2\t       x(tj)-xj3\n")
-% else
-%   printf("   tj\t\t       x(tj)-xj1\t   x(tj)-xj2\t       x(tj)-xj3\t   x(tj)-xj4\n")
-% end
-% disp(errores)
-% printf("\n")
-
-% %Creamos un arreglo con las leyendas de los graficos
-% legends = {};
-% for i=1:length(hin)
-%   legends(i)=num2str(hin(i));
-% end
-% legends(length(hin)+1)="x(t)";
-
-% %Imprimos todas las aproximaciones generadas en una misma grafica
-% hold on
-% for i=2:length(tabla(1,:))
-%   plot(tabla(:,1),tabla(:,i));
-% end
-% hold off
-% legend(legends);
-% title("APROXIMACIÓN NÚMERICA A LA SOLUCIÓN DE LA ECUACIÓN x''(t)")
-% xlabel("tj")
-% ylabel("x''(t)")
-% legends = legends(1:end-1);
-% input("Presione Enter para mostrar la grafica de Aproximaciones de los errores")
-% clf
-% %Limpiamos el grafico anterior e Imprimos todas lo errores generados en una misma grafica
-% hold on
-% for i=2:length(errores(1,:))
-%   plot(errores(:,1),errores(:,i));
-% end
-% hold off
-% title("ERRORES DE LAS APROXIMACIONES NÚMERICAS POR EL MÉTODO DE DIFERENCIAS FINITAS");
-% xlabel("tj");
-% ylabel("x(tj)");
-% legend(legends);
-
