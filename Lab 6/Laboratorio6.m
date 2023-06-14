@@ -55,11 +55,7 @@ if(op == 1)
 
         %Solucion primera ecuación diferencial ordinaria de forma U(t)
 
-        T=zeros(1,M+1);
-
-        for j=1:M+1
-            T(1,j)=tinf+(j-1)*h;
-        end
+        T=intervalo(1):hin(j):intervalo(2);
 
         U(1,1)=alpha;
         Y=zeros(1,M+1);
@@ -70,7 +66,7 @@ if(op == 1)
             
             y=Y(1,i-1);
             u=U(1,i-1);
-            t=T(1,i-1);
+            t=T(i-1);
             
             g1=double(subs(P,t)*y+subs(Q,t)*u+subs(R));
             f1=double(y);
